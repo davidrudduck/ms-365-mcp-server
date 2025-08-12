@@ -134,6 +134,7 @@ If you're running a local development version or fork of this repository:
 #### Setup
 
 1. **Build the project first:**
+
    ```bash
    npm run build
    ```
@@ -147,12 +148,7 @@ If you're running a local development version or fork of this repository:
      "mcpServers": {
        "ms365": {
          "command": "npx",
-         "args": [
-           "--directory",
-           "/path/to/your/ms-365-mcp-server",
-           "dist/index.js",
-           "--org-mode"
-         ]
+         "args": ["--directory", "/path/to/your/ms-365-mcp-server", "dist/index.js", "--org-mode"]
        }
      }
    }
