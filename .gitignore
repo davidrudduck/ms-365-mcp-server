@@ -144,3 +144,7 @@ openapi
 
 src/generated/client.ts
 **/.claude/settings.local.json
+
+# Claude and Serena working directories
+.claude/
+.serena/
