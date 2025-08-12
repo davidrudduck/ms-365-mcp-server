@@ -156,5 +156,9 @@ CLAUDE.md
 # MCP configuration (contains sensitive keys)
 .mcp.json
 
+# OMC and Playwright MCP working directories
+.omc/
+.playwright-mcp/
+
 # Finder metadata files
 .DS_Store
