@@ -127,6 +127,48 @@ claude mcp add ms365 -- npx -y @softeria/ms-365-mcp-server
 For other interfaces that support MCPs, please refer to their respective documentation for the correct
 integration method.
 
+### Local Development
+
+If you're running a local development version or fork of this repository:
+
+#### Setup
+
+1. **Build the project first:**
+   ```bash
+   npm run build
+   ```
+
+2. **Configure Claude Desktop** to use your local build:
+
+   Edit the config file under Settings > Developer:
+
+   ```json
+   {
+     "mcpServers": {
+       "ms365": {
+         "command": "npx",
+         "args": [
+           "--directory",
+           "/path/to/your/ms-365-mcp-server",
+           "dist/index.js",
+           "--org-mode"
+         ]
+       }
+     }
+   }
+   ```
+
+   Replace `/path/to/your/ms-365-mcp-server` with the absolute path to your local repository.
+
+#### Key Differences from Published Version
+
+- **Uses `--directory` flag** to specify the local project path
+- **Runs `dist/index.js`** (built files) instead of the published package
+- **Requires `npm run build`** before first use and after code changes
+- **Supports local modifications** and custom features
+
+> **Note**: Always run `npm run build` after making changes to the TypeScript source files to update the `dist/` folder.
+
 ### Authentication
 
 > ⚠️ You must authenticate before using tools.
