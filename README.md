@@ -129,45 +129,27 @@ integration method.
 
 ### Local Development
 
-If you're running a local development version or fork of this repository:
+For local development or testing:
 
-#### Setup
+```bash
+# From the project directory
+claude mcp add ms -- npx tsx src/index.ts --org-mode
+```
 
-1. **Build the project first:**
-   ```bash
-   npm run build
-   ```
+Or configure Claude Desktop manually:
 
-2. **Configure Claude Desktop** to use your local build:
+```json
+{
+  "mcpServers": {
+    "ms365": {
+      "command": "node",
+      "args": ["/absolute/path/to/ms-365-mcp-server/dist/index.js", "--org-mode"]
+    }
+  }
+}
+```
 
-   Edit the config file under Settings > Developer:
-
-   ```json
-   {
-     "mcpServers": {
-       "ms365": {
-         "command": "npx",
-         "args": [
-           "--directory",
-           "/path/to/your/ms-365-mcp-server",
-           "dist/index.js",
-           "--org-mode"
-         ]
-       }
-     }
-   }
-   ```
-
-   Replace `/path/to/your/ms-365-mcp-server` with the absolute path to your local repository.
-
-#### Key Differences from Published Version
-
-- **Uses `--directory` flag** to specify the local project path
-- **Runs `dist/index.js`** (built files) instead of the published package
-- **Requires `npm run build`** before first use and after code changes
-- **Supports local modifications** and custom features
-
-> **Note**: Always run `npm run build` after making changes to the TypeScript source files to update the `dist/` folder.
+> **Note**: Run `npm run build` after code changes to update the `dist/` folder.
 
 ### Authentication
 
