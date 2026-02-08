@@ -71,10 +71,6 @@ class MicrosoftGraphServer {
     this.server = new McpServer({
       name: 'Microsoft365MCP',
       version,
-      capabilities: {
-        tools: {},
-        resources: {},
-      },
     });
 
     const shouldRegisterAuthTools = !this.options.http || this.options.enableAuthTools;
