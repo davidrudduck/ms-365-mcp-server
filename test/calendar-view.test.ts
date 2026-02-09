@@ -27,6 +27,7 @@ vi.mock('../src/generated/client.js', () => ({
           { name: 'select', type: 'Query', schema: z.array(z.string()).optional() },
           { name: 'orderby', type: 'Query', schema: z.array(z.string()).optional() },
           { name: 'filter', type: 'Query', schema: z.string().optional() },
+          { name: 'expand', type: 'Query', schema: z.array(z.string()).optional() },
         ],
       },
       {
@@ -43,6 +44,7 @@ vi.mock('../src/generated/client.js', () => ({
           { name: 'select', type: 'Query', schema: z.array(z.string()).optional() },
           { name: 'orderby', type: 'Query', schema: z.array(z.string()).optional() },
           { name: 'filter', type: 'Query', schema: z.string().optional() },
+          { name: 'expand', type: 'Query', schema: z.array(z.string()).optional() },
         ],
       },
       {
@@ -230,6 +232,29 @@ describe('Calendar View Tools', () => {
       const calledPath = (mockGraphClient.graphRequest as ReturnType<typeof vi.fn>).mock
         .calls[0][0] as string;
       expect(calledPath).toContain('%24expand=singleValueExtendedProperties');
+    });
+
+    it('should append to existing $expand when expandExtendedProperties is set', async () => {
+      registerGraphTools(mockServer, mockGraphClient, false);
+
+      const specificViewCall = mockServer.tool.mock.calls.find(
+        (call: unknown[]) => call[0] === 'get-specific-calendar-view'
+      );
+      const handler = specificViewCall![specificViewCall!.length - 1] as (
+        params: Record<string, unknown>
+      ) => Promise<unknown>;
+
+      await handler({
+        calendarId: 'cal-abc-123',
+        startDateTime: '2024-01-01T00:00:00Z',
+        endDateTime: '2024-01-31T23:59:59Z',
+        expand: 'extensions',
+        expandExtendedProperties: true,
+      });
+
+      const calledPath = (mockGraphClient.graphRequest as ReturnType<typeof vi.fn>).mock
+        .calls[0][0] as string;
+      expect(calledPath).toContain('%24expand=extensions%2CsingleValueExtendedProperties');
     });
 
     it('should pass $top query parameter when provided', async () => {
