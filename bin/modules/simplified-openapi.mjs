@@ -253,6 +253,8 @@ function reduceProperties(schema, schemaName) {
       'path',
       'method',
       'enabled',
+      'singleValueExtendedProperties',
+      'multiValueExtendedProperties',
     ];
 
     const keptProperties = {};
