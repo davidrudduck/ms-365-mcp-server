@@ -76,9 +76,7 @@ function getSelectedAccountPath(): string {
  */
 function ensureParentDir(filePath: string): void {
   const dir = path.dirname(filePath);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
+  fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
 }
 
 /**
@@ -227,8 +225,9 @@ class AuthManager {
         );
       }
 
-      if (!cacheData && existsSync(getTokenCachePath())) {
-        cacheData = readFileSync(getTokenCachePath(), 'utf8');
+      const cachePath = getTokenCachePath();
+      if (!cacheData && existsSync(cachePath)) {
+        cacheData = readFileSync(cachePath, 'utf8');
       }
 
       if (cacheData) {
@@ -260,8 +259,9 @@ class AuthManager {
         );
       }
 
-      if (!selectedAccountData && existsSync(getSelectedAccountPath())) {
-        selectedAccountData = readFileSync(getSelectedAccountPath(), 'utf8');
+      const accountPath = getSelectedAccountPath();
+      if (!selectedAccountData && existsSync(accountPath)) {
+        selectedAccountData = readFileSync(accountPath, 'utf8');
       }
 
       if (selectedAccountData) {

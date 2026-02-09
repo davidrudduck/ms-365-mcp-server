@@ -42,6 +42,14 @@ describe('token cache path configuration', () => {
       const result = getTokenCachePath();
       expect(result).toBe('/tmp/test-cache/.token-cache.json');
     });
+
+    it('should return default path when env var is undefined', async () => {
+      delete process.env.MS365_MCP_TOKEN_CACHE_PATH;
+      const { getTokenCachePath } = await importHelpers();
+      const result = getTokenCachePath();
+      expect(result).toContain('.token-cache.json');
+      expect(path.isAbsolute(result)).toBe(true);
+    });
   });
 
   describe('getSelectedAccountPath', () => {
@@ -65,6 +73,14 @@ describe('token cache path configuration', () => {
       const { getSelectedAccountPath } = await importHelpers();
       const result = getSelectedAccountPath();
       expect(result).toBe('/tmp/test-cache/.selected-account.json');
+    });
+
+    it('should return default path when env var is undefined', async () => {
+      delete process.env.MS365_MCP_SELECTED_ACCOUNT_PATH;
+      const { getSelectedAccountPath } = await importHelpers();
+      const result = getSelectedAccountPath();
+      expect(result).toContain('.selected-account.json');
+      expect(path.isAbsolute(result)).toBe(true);
     });
   });
 });
