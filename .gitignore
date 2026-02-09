@@ -152,6 +152,10 @@ CLAUDE.md
 # Claude and Serena working directories
 .claude/
 .serena/
+.omc/
+
+# Playwright MCP
+.playwright-mcp/
 
 # MCP configuration (contains sensitive keys)
 .mcp.json
