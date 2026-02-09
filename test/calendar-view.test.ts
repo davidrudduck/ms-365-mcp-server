@@ -77,6 +77,13 @@ describe('Calendar View Tools', () => {
     } as unknown as GraphClient;
   });
 
+  function getToolHandler(toolName: string) {
+    registerGraphTools(mockServer, mockGraphClient, false);
+    const call = mockServer.tool.mock.calls.find((c: unknown[]) => c[0] === toolName);
+    expect(call).toBeDefined();
+    return call![call!.length - 1] as (params: Record<string, unknown>) => Promise<unknown>;
+  }
+
   describe('tool registration', () => {
     it('should register all three calendar view/instances tools', () => {
       registerGraphTools(mockServer, mockGraphClient, false);
@@ -141,6 +148,10 @@ describe('Calendar View Tools', () => {
         const toolName = call[0] as string;
         const description = call[1] as string;
 
+        if (toolName === 'get-calendar-view') {
+          expect(description).toContain('TIP:');
+          expect(description).toContain('recurring event instances');
+        }
         if (toolName === 'get-specific-calendar-view') {
           expect(description).toContain('TIP:');
           expect(description).toContain('recurring event instances');
@@ -155,17 +166,7 @@ describe('Calendar View Tools', () => {
 
   describe('tool execution', () => {
     it('should call graphRequest with correct path for specific calendar view', async () => {
-      registerGraphTools(mockServer, mockGraphClient, false);
-
-      const specificViewCall = mockServer.tool.mock.calls.find(
-        (call: unknown[]) => call[0] === 'get-specific-calendar-view'
-      );
-      expect(specificViewCall).toBeDefined();
-
-      // The handler is the last argument
-      const handler = specificViewCall![specificViewCall!.length - 1] as (
-        params: Record<string, unknown>
-      ) => Promise<unknown>;
+      const handler = getToolHandler('get-specific-calendar-view');
 
       await handler({
         calendarId: 'cal-abc-123',
@@ -186,14 +187,7 @@ describe('Calendar View Tools', () => {
     });
 
     it('should set timezone header when timezone param is provided', async () => {
-      registerGraphTools(mockServer, mockGraphClient, false);
-
-      const specificViewCall = mockServer.tool.mock.calls.find(
-        (call: unknown[]) => call[0] === 'get-specific-calendar-view'
-      );
-      const handler = specificViewCall![specificViewCall!.length - 1] as (
-        params: Record<string, unknown>
-      ) => Promise<unknown>;
+      const handler = getToolHandler('get-specific-calendar-view');
 
       await handler({
         calendarId: 'cal-abc-123',
@@ -213,14 +207,7 @@ describe('Calendar View Tools', () => {
     });
 
     it('should add $expand for extended properties when requested', async () => {
-      registerGraphTools(mockServer, mockGraphClient, false);
-
-      const specificViewCall = mockServer.tool.mock.calls.find(
-        (call: unknown[]) => call[0] === 'get-specific-calendar-view'
-      );
-      const handler = specificViewCall![specificViewCall!.length - 1] as (
-        params: Record<string, unknown>
-      ) => Promise<unknown>;
+      const handler = getToolHandler('get-specific-calendar-view');
 
       await handler({
         calendarId: 'cal-abc-123',
@@ -235,20 +222,13 @@ describe('Calendar View Tools', () => {
     });
 
     it('should append to existing $expand when expandExtendedProperties is set', async () => {
-      registerGraphTools(mockServer, mockGraphClient, false);
-
-      const specificViewCall = mockServer.tool.mock.calls.find(
-        (call: unknown[]) => call[0] === 'get-specific-calendar-view'
-      );
-      const handler = specificViewCall![specificViewCall!.length - 1] as (
-        params: Record<string, unknown>
-      ) => Promise<unknown>;
+      const handler = getToolHandler('get-specific-calendar-view');
 
       await handler({
         calendarId: 'cal-abc-123',
         startDateTime: '2024-01-01T00:00:00Z',
         endDateTime: '2024-01-31T23:59:59Z',
-        expand: 'extensions',
+        expand: ['extensions'],
         expandExtendedProperties: true,
       });
 
@@ -258,14 +238,7 @@ describe('Calendar View Tools', () => {
     });
 
     it('should pass $top query parameter when provided', async () => {
-      registerGraphTools(mockServer, mockGraphClient, false);
-
-      const specificViewCall = mockServer.tool.mock.calls.find(
-        (call: unknown[]) => call[0] === 'get-specific-calendar-view'
-      );
-      const handler = specificViewCall![specificViewCall!.length - 1] as (
-        params: Record<string, unknown>
-      ) => Promise<unknown>;
+      const handler = getToolHandler('get-specific-calendar-view');
 
       await handler({
         calendarId: 'cal-abc-123',
@@ -280,16 +253,7 @@ describe('Calendar View Tools', () => {
     });
 
     it('should call graphRequest with correct path for event instances', async () => {
-      registerGraphTools(mockServer, mockGraphClient, false);
-
-      const instancesCall = mockServer.tool.mock.calls.find(
-        (call: unknown[]) => call[0] === 'list-calendar-event-instances'
-      );
-      expect(instancesCall).toBeDefined();
-
-      const handler = instancesCall![instancesCall!.length - 1] as (
-        params: Record<string, unknown>
-      ) => Promise<unknown>;
+      const handler = getToolHandler('list-calendar-event-instances');
 
       await handler({
         calendarId: 'cal-abc-123',
